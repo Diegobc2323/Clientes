@@ -5,19 +5,30 @@
  */
 package vista;
 
+import controlador.IOData;
+import java.awt.Toolkit;
+import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import modelo.Cliente;
 
 /**
  *
  * @author daw-B
  */
 public class Inicio extends javax.swing.JFrame {
-
+    ArrayList<Cliente> vClientes;
     /**
      * Creates new form Inicio
      */
     public Inicio() {
         initComponents();
+        rellenarDatos();
+        ImageIcon img = new ImageIcon("imagenes/icono.png");
+        setIconImage(img.getImage());
+        setIconImage(new ImageIcon(getClass().getResource("/imagenes/icono.png")).getImage());
+        
     }
 
     /**
@@ -40,8 +51,8 @@ public class Inicio extends javax.swing.JFrame {
         jLabelEstadoCivil = new javax.swing.JLabel();
         jComboBoxEstadoCivil = new javax.swing.JComboBox<>();
         jLabelSexo = new javax.swing.JLabel();
-        jRadioHombre = new javax.swing.JRadioButton();
-        jRadioButtonMujer = new javax.swing.JRadioButton();
+        jRadioButtonMasculino = new javax.swing.JRadioButton();
+        jRadioButtonFemenino = new javax.swing.JRadioButton();
         jLabelEdad = new javax.swing.JLabel();
         jTextFieldEdad = new javax.swing.JTextField();
         jButtonGuardar = new javax.swing.JButton();
@@ -50,7 +61,7 @@ public class Inicio extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaMostrarDatos = new javax.swing.JTextArea();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos personales", javax.swing.border.TitledBorder.LEADING, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
 
@@ -66,11 +77,11 @@ public class Inicio extends javax.swing.JFrame {
 
         jLabelSexo.setText("Sexo:");
 
-        buttonGroupSexo.add(jRadioHombre);
-        jRadioHombre.setText("Hombre");
+        buttonGroupSexo.add(jRadioButtonMasculino);
+        jRadioButtonMasculino.setText("Masculino");
 
-        buttonGroupSexo.add(jRadioButtonMujer);
-        jRadioButtonMujer.setText("Mujer");
+        buttonGroupSexo.add(jRadioButtonFemenino);
+        jRadioButtonFemenino.setText("Femenino");
 
         jLabelEdad.setText("Edad:");
 
@@ -97,9 +108,9 @@ public class Inicio extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(57, 57, 57)
-                        .addComponent(jRadioHombre)
+                        .addComponent(jRadioButtonMasculino)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jRadioButtonMujer)
+                        .addComponent(jRadioButtonFemenino)
                         .addGap(78, 78, 78))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -134,8 +145,8 @@ public class Inicio extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelSexo)
-                    .addComponent(jRadioHombre)
-                    .addComponent(jRadioButtonMujer))
+                    .addComponent(jRadioButtonMasculino)
+                    .addComponent(jRadioButtonFemenino))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelEdad)
@@ -143,6 +154,11 @@ public class Inicio extends javax.swing.JFrame {
         );
 
         jButtonGuardar.setText("Guardar");
+        jButtonGuardar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButtonGuardarMouseClicked(evt);
+            }
+        });
 
         jButtonSalir.setText("Salir");
         jButtonSalir.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -169,8 +185,8 @@ public class Inicio extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -219,6 +235,36 @@ public class Inicio extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButtonSalirMouseClicked
 
+    private void jButtonGuardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonGuardarMouseClicked
+        String nombre;
+        String apellido1;
+        String apellido2;
+        String estado_civil="";
+        String sexo;
+        int edad;
+        
+        if (jRadioButtonMasculino.isSelected()) {
+            sexo=jRadioButtonMasculino.getText();
+        }else
+            sexo=jRadioButtonFemenino.getText();
+        
+        nombre = jTextFieldNombre.getText();
+        apellido1 = jTextFieldApellido1.getText();
+        apellido2 = jTextFieldApellido2.getText();
+        estado_civil= (String)jComboBoxEstadoCivil.getSelectedItem();
+        
+        
+        edad= Integer.parseInt(jTextFieldEdad.getText());
+        
+        Cliente c = new Cliente(nombre, apellido1, apellido2, estado_civil, sexo, edad);
+        vClientes.add(c);
+        
+       escribirArray();
+       
+       IOData.escribirClientes(vClientes);
+        
+    }//GEN-LAST:event_jButtonGuardarMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -254,6 +300,27 @@ public class Inicio extends javax.swing.JFrame {
         });
     }
 
+    public void rellenarDatos(){
+        vClientes = new ArrayList();
+        jTextAreaMostrarDatos.setEditable(false);
+        
+        vClientes = IOData.cargarClientes();
+        
+        escribirArray();
+    }
+    
+    public void escribirArray() {
+        String texto ="";
+        
+        for (int i = 0; i < vClientes.size(); i++) {
+            if (i==0) {
+                texto = vClientes.get(i).toString();
+            }else
+                texto += "\n"+vClientes.get(i).toString();
+        }
+        
+        jTextAreaMostrarDatos.setText(texto);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroupSexo;
     private javax.swing.JButton jButtonGuardar;
@@ -267,8 +334,8 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelSexo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioButtonMujer;
-    private javax.swing.JRadioButton jRadioHombre;
+    private javax.swing.JRadioButton jRadioButtonFemenino;
+    private javax.swing.JRadioButton jRadioButtonMasculino;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextAreaMostrarDatos;
     private javax.swing.JTextField jTextFieldApellido1;
